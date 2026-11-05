@@ -22,7 +22,7 @@ nav.side b{display:block;font-size:15px;margin:0 0 12px 8px}nav.side a{display:b
 .hb{display:flex;position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--bd);padding:10px 16px;gap:10px;align-items:center;font-weight:600}.hb button{font-size:22px;background:none;border:1px solid var(--bd);border-radius:8px;padding:0 10px;cursor:pointer;color:var(--ink)}}
 .q{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;border:1px solid var(--bd);background:var(--card);color:var(--sub);font-size:12px;font-weight:700;cursor:pointer;margin-left:8px;vertical-align:middle;padding:0}
 .help{display:none;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:10px 14px;color:var(--sub);font-size:13px;margin:6px 0 12px}.help.on{display:block}
-</style></head><body><div class="hb"><button onclick="document.querySelector('nav.side').classList.toggle('open')" aria-label="選單">☰</button>阿蒙的投資儀表板</div>
+tr.today td{background:#F3E6C8}tr.today td:first-child{box-shadow:inset 4px 0 0 #C9A26B}</style></head><body><div class="hb"><button onclick="document.querySelector('nav.side').classList.toggle('open')" aria-label="選單">☰</button>阿蒙的投資儀表板</div>
 <div class="layout"><nav class="side"><b>快速導覽</b><a href="#sum">今日重點</a><a href="#news">新聞</a><a href="#tw">台股</a><a href="#chip">籌碼</a><a href="#us">美股</a><a href="#cal">行事曆</a></nav><main>
 <h1>阿蒙的投資儀表板</h1><p class="upd">最後更新：2026-11-05 20:45（台北）</p>
 <section id="sum"><div class="callout"><b>今日三行重點</b>
@@ -78,6 +78,7 @@ s.addEventListener("mouseleave",()=>{tip&&tip.remove();tip=null});return s}
 const CH=DATA.chips;CH.inst.forEach(([n,v])=>{const d=document.createElement("div");d.className="card";d.innerHTML=`<h4>${n} 買賣超（億元）</h4><div class="px">11/05：${v.at(-1)>0?"+":""}${fmt(v.at(-1),2)} 億元</div>`;d.appendChild(bars(v,CH.CD));document.getElementById("inst").appendChild(d)});
 CH.lines.forEach(([n,dt,lab,v,dec,u])=>{const d=document.createElement("div");d.className="card";d.innerHTML=`<h4>${n}</h4><div class="px">${dt}：${fmt(v.at(-1),dec)}${u}</div>`;d.appendChild(line(v,lab,dec,u));document.getElementById("chipl").appendChild(d)});
 const a=(h,l)=>`<a href="${h}" target="_blank" rel="noreferrer">${l}</a>`;const add=(id,h)=>document.getElementById(id).insertAdjacentHTML("beforeend",h);
-DATA.cal.forEach(([d,e,l,h])=>add("calT",`<tr><td style="white-space:nowrap">${d}</td><td>${e}</td><td>${a(h,l)}</td></tr>`));
+const TD=new Intl.DateTimeFormat("en-US",{timeZone:"Asia/Taipei",month:"2-digit",day:"2-digit"}).format(new Date());const isT=d=>{const m=d.match(/^(\d+)\/(\d+)/);return m&&`${m[1].padStart(2,"0")}/${m[2].padStart(2,"0")}`===TD};
+DATA.cal.forEach(([d,e,l,h])=>add("calT",`<tr${isT(d)?' class="today"':""}><td style="white-space:nowrap">${d}</td><td>${e}</td><td>${a(h,l)}</td></tr>`));
 DATA.news.forEach(([t,ti,s,l,h])=>add("newsT",`<tr><td style="white-space:nowrap">${t}</td><td>${ti}</td><td>${s}</td><td>${a(h,l)}</td></tr>`));
 document.querySelectorAll("nav.side a").forEach(a=>a.addEventListener("click",()=>document.querySelector("nav.side").classList.remove("open")));</script></body></html>
