@@ -50,7 +50,7 @@ function candle(q,us){const k=q.k,hasV=q.vu&&k.some(r=>r[5]>0);const W=600,L=76,
 const mm=[...q.ma10,...q.ma20,...q.ma60].filter(v=>v!=null),lo=Math.min(...k.map(r=>r[3]),...mm),hi=Math.max(...k.map(r=>r[2]),...mm),span=hi-lo||hi*.02,st=nice(span,4),y0=Math.floor((lo-span*.05)/st)*st,y1=Math.ceil((hi+span*.05)/st)*st;
 const slot=(W-L-R)/k.length,x=i=>L+slot*(i+.5),y=v=>T+(y1-v)*(PB-T)/(y1-y0),vMax=Math.max(...k.map(r=>r[5]),1),vy=v=>VB-v/vMax*(VB-VT),bw=slot*.74;
 const s=el("svg",{viewBox:`0 0 ${W} ${H}`});for(let v=y0;v<=y1+1e-9;v+=st){el("line",{x1:L,x2:W-R,y1:y(v),y2:y(v),stroke:V("--grid")},s);txt(s,{x:L-6,y:y(v)+4,"text-anchor":"end","font-size":15,fill:V("--sub")},Math.round(v).toLocaleString("en-US"))}
-if(hasV)txt(s,{x:L-6,y:VT+8,"text-anchor":"end","font-size":14,fill:V("--sub")},q.vu);
+
 const up=us?V("--green"):V("--red"),dn=us?V("--red"):V("--green");const hl=el("rect",{y:T,width:slot-4,height:(hasV?VB:PB)-T,fill:V("--grid"),opacity:0},s);
 k.forEach((r,i)=>{const[d,o,h,l,c,v]=r,col=c>o?up:c<o?dn:V("--sub");el("line",{x1:x(i),x2:x(i),y1:y(h),y2:y(l),stroke:col,"stroke-width":1.5},s);
 el("rect",{x:x(i)-bw/2,y:y(Math.max(o,c)),width:bw,height:Math.max(1.5,y(Math.min(o,c))-y(Math.max(o,c))),fill:col,rx:1.5},s);
