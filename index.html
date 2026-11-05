@@ -21,7 +21,7 @@ th,td{padding:9px 14px;border-bottom:1px solid var(--grid);text-align:left;verti
 <p>2. 美股 11/04 道瓊 +3.03%、費半 -3.13%；MU -7.00%、MRVL -7.08%、TSM -2.24%，MSFT +6.68%、AMZN +6.12%。</p>
 <p>3. 外資台指期淨空單增至 95,651 口；上市融資維持率 164.47%（11/04）。</p></div>
 <h2>台股</h2><p class="cap">2026-11-05 收盤（台北 13:30）；近 5 日 K 線，紅漲綠跌（收＞開為紅）；漲跌幅相對前一日收盤；加權與個股資料 Yahoo Finance，櫃買指數取自櫃買中心，台指期取自期交所（一般盤）</p><div class="grid" id="tw"></div>
-<h2>籌碼</h2><div class="tbl" style="max-width:720px"><table id="chips"><tr><th>項目</th><th>最新值</th><th>資料日期</th></tr></table></div>
+<h2>籌碼</h2><div class="card" style="margin-bottom:16px"><h4>三大法人買賣超（億元，10/30–11/05）</h4><div id="inst"></div></div><div class="grid" id="chipc" style="margin-bottom:16px"></div><div class="tbl" style="max-width:720px"><table id="chips"><tr><th>項目</th><th>最新值</th><th>資料日期</th></tr></table></div>
 <p class="note">券資比依證交所信用交易統計（融券張數 ÷ 融資張數）計算。融資維持率為<a href="https://www.istock.tw/post/twmarginrequirement_more" target="_blank">愛玩股</a>以交易所資料估算的大盤值；官方整戶擔保維持率自 2026/07/29 起暫停公布。來源：<a href="https://www.twse.com.tw/zh/trading/foreign/bfi82u.html" target="_blank">臺灣證券交易所</a>、<a href="https://www.taifex.com.tw/cht/3/futContractsDate" target="_blank">臺灣期貨交易所</a></p>
 <h2>美股</h2><p class="cap">最近交易日 2026-11-04（美東）收盤；近 5 日 K 線，美股慣例綠漲紅跌（收＞開為綠）；資料 Yahoo Finance</p>
 <h3>指數</h3><div class="grid" id="idx"></div><h3>個股（美元）</h3><div class="grid" id="stk"></div>
@@ -53,4 +53,21 @@ const a=(h,l)=>`<a href="${h}" target="_blank" rel="noreferrer">${l}</a>`;const 
 DATA.chips.forEach(([n,v,d,s])=>add("chips",`<tr><td>${n}</td><td class="n ${s>0?"tr":s<0?"tg":""}">${v}</td><td>${d}</td></tr>`));
 DATA.cal.forEach(([d,e,l,h])=>add("cal",`<tr><td>${d}</td><td>${e}</td><td>${a(h,l)}</td></tr>`));
 DATA.news.forEach(([t,ti,s,l,h])=>add("news",`<tr><td style="white-space:nowrap">${t}</td><td>${ti}</td><td>${s}</td><td>${a(h,l)}</td></tr>`));
+
+const LBL=["10/30","11/02","11/03","11/04","11/05"];
+(function(){const S=[["外資及陸資",[-1124.67,-735.21,-1073.07,-1499.0,-1024.61],"#8A6A43"],["投信",[236.19,338.16,184.6,272.58,225.32],"#C9A26B"],["自營商（自行＋避險）",[-513.69,-152.89,-590.54,-375.19,-435.27],"#7FA7A0"]];
+const W=1100,H=300,L=70,R=20,T=40,B=36,y0=-1600,y1=400,y=v=>T+(y1-v)*(H-T-B)/(y1-y0),s=el("svg",{viewBox:`0 0 ${W} ${H}`});
+S.forEach(([n,,c],j)=>{el("rect",{x:L+j*200,y:8,width:12,height:12,rx:2,fill:c},s);const t=el("text",{x:L+j*200+18,y:19,"font-size":13,fill:V("--ink")},s);t.textContent=n});
+for(let v=y0;v<=y1;v+=400){el("line",{x1:L,x2:W-R,y1:y(v),y2:y(v),stroke:v==0?V("--sub"):V("--grid")},s);const t=el("text",{x:L-8,y:y(v)+4,"text-anchor":"end","font-size":13,fill:V("--sub")},s);t.textContent=v.toLocaleString("en-US")}
+const slot=(W-L-R)/5,bw=slot/5;LBL.forEach((d,i)=>{S.forEach(([n,vals,c],j)=>{const v=vals[i],bx=L+slot*i+slot/2-1.5*bw+j*bw;const r=el("rect",{x:bx+2,y:Math.min(y(v),y(0)),width:bw-4,height:Math.abs(y(v)-y(0)),fill:c,rx:2},s);const tt=el("title",{},r);tt.textContent=`${d} ${n}：${v.toFixed(2)} 億元`});
+const t=el("text",{x:L+slot*(i+.5),y:H-10,"text-anchor":"middle","font-size":13,fill:V("--sub")},s);t.textContent=d});document.getElementById("inst").appendChild(s)})();
+function line(title,pts,dec,unit){const W=600,H=240,L=72,R=24,T=16,B=36;const v=pts.map(p=>p[1]),lo=Math.min(...v),hi=Math.max(...v),pad=(hi-lo)*.15||1,y0=lo-pad,y1=hi+pad;
+const x=i=>L+i*(W-L-R)/(pts.length-1),y=q=>T+(y1-q)*(H-T-B)/(y1-y0),s=el("svg",{viewBox:`0 0 ${W} ${H}`});
+for(let k=0;k<=4;k++){const q=y0+(y1-y0)*k/4;el("line",{x1:L,x2:W-R,y1:y(q),y2:y(q),stroke:V("--grid")},s);const t=el("text",{x:L-8,y:y(q)+4,"text-anchor":"end","font-size":13,fill:V("--sub")},s);t.textContent=q.toLocaleString("en-US",{maximumFractionDigits:dec})}
+el("path",{d:pts.map((p,i)=>`${i?"L":"M"}${x(i)},${y(p[1])}`).join(" "),fill:"none",stroke:"#8A6A43","stroke-width":2.5},s);
+pts.forEach((p,i)=>{const c=el("circle",{cx:x(i),cy:y(p[1]),r:5,fill:"#8A6A43"},s);const tt=el("title",{},c);tt.textContent=`${p[0]}：${p[1].toLocaleString("en-US",{minimumFractionDigits:dec,maximumFractionDigits:dec})}${unit}`;const t=el("text",{x:x(i),y:H-10,"text-anchor":"middle","font-size":13,fill:V("--sub")},s);t.textContent=p[0]});
+const d=document.createElement("div");d.className="card";d.innerHTML=`<h4>${title}</h4>`;d.appendChild(s);document.getElementById("chipc").appendChild(d)}
+line("外資台指期淨未平倉（口，10/30–11/05）",[["10/30",-92241],["11/02",-89379],["11/03",-91812],["11/04",-93647],["11/05",-95651]],0,"");
+line("券資比（%，10/29–11/04）",[["10/29",1.97],["10/30",2.07],["11/02",2.04],["11/03",2.72],["11/04",2.59]],2,"%");
+line("融資維持率（%，10/29–11/04）",[["10/29",178.44],["10/30",171.75],["11/02",171.7],["11/03",162.67],["11/04",164.47]],2,"%");
 </script></body></html>
